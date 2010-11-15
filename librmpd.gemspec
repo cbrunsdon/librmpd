@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.description = %q{A library for the Music Player Daemon (MPD)}
 	# switched to my email too...
   s.email = %q{clarke@nullfs.com}
-  s.extra_rdoc_files = ["README"]
-  s.files = ["lib/mpdserver.rb", "lib/librmpd.rb", "data/database.yaml", "examples/rmpc.rb", "examples/tailmpc.rb", "AUTHORS", "COPYING", "README", "tests/libtests.rb", "tests/servertests.rb"]
+  s.extra_rdoc_files = ["README.md"]
+  s.files = ["lib/mpdserver.rb", "lib/librmpd.rb", "data/database.yaml", "examples/rmpc.rb", "examples/tailmpc.rb", "AUTHORS", "COPYING", "README.md", "tests/libtests.rb", "tests/servertests.rb"]
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new("> 0.0.0")
   s.rubygems_version = %q{1.3.7}
