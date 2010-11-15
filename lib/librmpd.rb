@@ -1003,6 +1003,17 @@ class MPD
     send_command("disableoutput #{num.to_s}")
   end
 
+  #
+  # Allows for batch commands to be sent to the mpd server without waiting for responses
+  # Takes a block which returns the mpd instance to us for commands send to the batch
+  #
+  # WARNING: Don't make calls on the original MPD object while in a command block.
+  def command_list &block
+    mpd = CommandListMPD.new(@socket)
+    mpd.start_list
+    yield(mpd)
+    mpd.end_list
+  end
 
   #
   # Private Method
@@ -1190,6 +1201,36 @@ class MPD
     end
 
     return list
+  end
+
+  private 
+  # Handles sending commands to the mpd server while in command list mode
+  class CommandListMPD < MPD
+    alias send_command_with_response send_command
+
+    def initialize(socket)
+      super
+      @socket = socket
+    end
+
+    def start_list
+      send_command("command_list_begin")
+    end
+
+    def end_list
+      send_command_with_response("command_list_end")
+    end
+
+    def send_command command
+      @mutex.synchronize do
+        begin
+          @socket.puts command
+        rescue Errno::EPIPE
+          @socket = nil
+          raise 'MPD Error: Broken Pipe (Disconnected)'
+        end
+      end
+    end
   end
 
   private :send_command
